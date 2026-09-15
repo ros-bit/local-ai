@@ -202,8 +202,21 @@ async function loadConversations() {
 function renderConversationList() {
   let query = $('search').value.toLowerCase();
   $('conversation-list').innerHTML = state.conversations.filter(c => c.title.toLowerCase().includes(query)).map(c => `<div class="conversation-row"><button class="conversation ${c.id===state.conversationId?'active':''}" data-id="${c.id}">${escapeHtml(c.title)}</button><button class="delete-conversation" data-delete-id="${escapeHtml(c.id)}" title="Delete conversation" aria-label="Delete ${escapeHtml(c.title)}">×</button></div>`).join('');
-  document.querySelectorAll('.conversation').forEach(b => b.onclick = () => openConversation(b.dataset.id));
+  document.querySelectorAll('.conversation').forEach(b => b.onclick = () => {
+    closeSidebar();
+    openConversation(b.dataset.id)
+  });
   document.querySelectorAll('.delete-conversation').forEach(b => b.onclick = () => deleteConversation(b.dataset.deleteId));
+}
+function closeSidebar() {
+  document.body.classList.remove('sidebar-open');
+  $('menu-button').setAttribute('aria-expanded', 'false');
+  $('sidebar-backdrop').classList.add('hidden')
+}
+function toggleSidebar() {
+  let open = document.body.classList.toggle('sidebar-open');
+  $('menu-button').setAttribute('aria-expanded', String(open));
+  $('sidebar-backdrop').classList.toggle('hidden', !open)
 }
 async function deleteConversation(id) {
   let conversation = state.conversations.find(item => item.id === id);
@@ -278,7 +291,11 @@ async function send(text, regenerate = false) {
     if (!raw) content.innerHTML = '<p>No response was generated.</p>';
     await loadConversations()
   } catch (e) {
-    content.innerHTML = `<p class="error">${e.name==='AbortError'?'Generation stopped.':escapeHtml(e.message)}</p>`
+    if (e.name === 'AbortError') {
+      if (!raw) content.innerHTML = '<p class="error">Generation stopped.</p>';
+    } else {
+      content.innerHTML = `<p class="error">${escapeHtml(e.message)}</p>`;
+    }
   } finally {
     state.busy = false;
     state.controller = null;
@@ -300,6 +317,7 @@ function applyTheme() {
   let dark = state.settings?.theme === 'dark' || (state.settings?.theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
   document.body.classList.toggle('dark', dark);
   document.body.dataset.font = state.settings?.font_size || 'medium';
+  $('settings-form').elements.dark.checked = state.settings?.theme === 'dark';
 }
 bindActions();
 $('composer').onsubmit = e => {
@@ -317,10 +335,17 @@ prompt.oninput = () => {
   prompt.style.height = Math.min(prompt.scrollHeight, 180) + 'px'
 };
 $('stop').onclick = () => state.controller?.abort();
+$('menu-button').onclick = toggleSidebar;
+$('sidebar-backdrop').onclick = closeSidebar;
 $('new-chat').onclick = () => {
+  closeSidebar();
   state.conversationId = null;
   $('page-title').textContent = 'New conversation';
-  messages.innerHTML = '<div id="welcome" class="welcome"><div class="welcome-icon">✦</div><h1>How can I help you?</h1><p>Your private AI assistant, running entirely on this computer.</p></div>';
+  prompt.value = '';
+  prompt.style.height = 'auto';
+  prompt.focus();
+  messages.innerHTML = '<div id="welcome" class="welcome"><div class="welcome-icon">L</div><h1>How can I help you?</h1><p>Your private AI assistant, running entirely on this computer.</p><div class="suggestions"><button>Explain a complex topic step by step</button><button>Help me write and debug code</button><button>Work through a math problem</button></div></div>';
+  document.querySelectorAll('.suggestions button').forEach(b => b.onclick = () => send(b.textContent));
   renderConversationList()
 };
 $('clear-chat').onclick = async () => {
