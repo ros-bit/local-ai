@@ -6,8 +6,7 @@
   --line: #e2e2e5;
   --accent: #6257d9;
   --soft: #eeecff;
-  --code: #1e1f25;
-  --focus: 0 0 0 3px color-mix(in srgb, var(--accent) 28%, transparent)
+  --code: #1e1f25
 }
 
 * {
@@ -20,9 +19,7 @@ body {
   color: var(--ink);
   font: 14px/1.6 Inter, system-ui, sans-serif;
   display: flex;
-  height: 100vh;
-  min-height: 100dvh;
-  overflow: hidden
+  height: 100vh
 }
 
 body.dark {
@@ -74,46 +71,6 @@ body[data-font=large] {
   padding: 9px 11px;
   cursor: pointer;
   text-align: left
-}
-
-.new-chat {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 650;
-  transition: background .15s ease, border-color .15s ease, transform .15s ease
-}
-
-.new-chat:hover {
-  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
-  transform: translateY(-1px)
-}
-
-.new-chat-icon {
-  display: inline-grid;
-  place-items: center;
-  width: 22px;
-  height: 22px;
-  border-radius: 6px;
-  background: var(--soft);
-  color: var(--accent);
-  font-size: 20px;
-  line-height: 1
-}
-
-.new-chat,
-.search,
-.composer-bar button,
-.icon-button {
-  min-height: 40px
-}
-
-button:focus-visible,
-input:focus-visible,
-textarea:focus-visible,
-select:focus-visible {
-  outline: none;
-  box-shadow: var(--focus)
 }
 
 .new-chat:hover,
@@ -194,46 +151,6 @@ select:focus-visible {
   cursor: pointer
 }
 
-.settings-button {
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 10px !important;
-  transition: background .15s ease, color .15s ease, transform .15s ease
-}
-
-.settings-button svg,
-.exit-button svg {
-  width: 20px;
-  height: 20px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.8;
-  stroke-linecap: round;
-  stroke-linejoin: round
-}
-
-.settings-button:hover {
-  color: var(--accent);
-  background: var(--soft);
-  transform: rotate(18deg)
-}
-
-.exit-button {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  transition: color .15s ease, background .15s ease
-}
-
-.exit-button:hover {
-  color: #c94b4b;
-  background: color-mix(in srgb, #c94b4b 12%, transparent)
-}
-
 .status-dot {
   width: 7px;
   height: 7px;
@@ -255,13 +172,7 @@ select:focus-visible {
   align-items: center;
   justify-content: space-between;
   padding: 0 30px;
-  background: var(--panel);
-  position: relative;
-  z-index: 2
-}
-
-.menu-button {
-  display: none
+  background: var(--panel)
 }
 
 .local-badge {
@@ -285,8 +196,7 @@ select:focus-visible {
 .messages {
   flex: 1;
   overflow: auto;
-  padding: 35px max(24px, calc((100% - 850px)/2));
-  overscroll-behavior: contain
+  padding: 35px max(24px, calc((100% - 850px)/2))
 }
 
 .welcome {
@@ -483,19 +393,13 @@ select:focus-visible {
   opacity: 1
 }
 
-.message-actions button {
-  padding: 7px 3px;
-  min-height: 32px
-}
-
 .composer {
   max-width: 850px;
   width: calc(100% - 48px);
   margin: 0 auto 8px;
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: 12px;
-  box-shadow: 0 4px 18px #0000000a
+  border-radius: 12px
 }
 
 .composer textarea {
@@ -507,8 +411,7 @@ select:focus-visible {
   font: inherit;
   background: transparent;
   color: var(--ink);
-  max-height: 180px;
-  min-height: 52px
+  max-height: 180px
 }
 
 .composer-bar {
@@ -541,10 +444,6 @@ select:focus-visible {
 
 .hidden {
   display: none !important
-}
-
-.sidebar-backdrop.hidden {
-  display: none
 }
 
 dialog {
@@ -625,153 +524,45 @@ label select {
 
 .dialog-actions .primary {
   background: var(--accent);
-  border-color: var(--accent);
-  color: #fff
+  color: #fff;
+  border-color: var(--accent)
 }
 
-.sidebar-backdrop {
-  display: none
-}
-
-@media (max-width: 700px) {
-  body {
-    font-size: 15px
-  }
-
+@media(max-width:700px) {
   .sidebar {
-    position: fixed;
-    inset: 0 auto 0 0;
-    z-index: 5;
-    width: min(300px, 88vw);
-    padding: max(16px, env(safe-area-inset-top)) 14px max(16px, env(safe-area-inset-bottom));
-    transform: translateX(-105%);
-    transition: transform .2s ease;
-    box-shadow: 12px 0 35px #0003
+    width: 58px;
+    padding: 18px 8px
   }
 
-  body.sidebar-open .sidebar {
-    transform: translateX(0)
+  .brand span:not(.brand-mark),
+  .conversation-label,
+  .sidebar-footer span:last-child,
+  .new-chat,
+  .search {
+    display: none
   }
 
-  .sidebar-backdrop {
-    display: block;
-    position: fixed;
-    inset: 0;
-    z-index: 4;
-    border: 0;
-    background: #0006
-  }
-
-  .menu-button {
-    display: inline-grid;
-    place-items: center;
-    margin-right: 8px
-  }
-
-  .new-chat {
-    justify-content: flex-start;
-    min-height: 44px
-  }
-
-  .topbar {
-    height: 58px;
-    padding: 0 14px
-  }
-
-  .topbar > div {
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap
-  }
-
-  .local-badge {
-    margin-left: 5px
+  .brand {
+    padding: 0 11px
   }
 
   .messages {
-    padding: 24px 16px
+    padding: 22px 16px
   }
 
-  .welcome {
-    margin-top: 9vh
-  }
-
-  .welcome h1 {
-    font-size: 26px
-  }
-
-  .suggestions {
-    display: grid;
-    gap: 8px;
-    margin-top: 22px
-  }
-
-  .suggestions button {
-    width: 100%;
-    text-align: left;
-    min-height: 44px
-  }
-
-  .message {
-    gap: 10px;
-    margin-bottom: 30px
-  }
-
-  .avatar {
-    width: 30px;
-    height: 30px
-  }
-
-  .message-actions {
-    opacity: 1;
-    position: static;
-    margin-top: 8px;
-    gap: 14px
+  .topbar {
+    padding: 0 16px
   }
 
   .composer {
-    width: calc(100% - 20px);
-    margin-bottom: 6px;
-    border-radius: 14px
+    width: calc(100% - 24px)
   }
 
-  .composer textarea {
-    padding: 12px 13px 4px;
-    min-height: 48px
-  }
-
-  .composer-bar {
-    padding: 3px 8px 8px 13px
-  }
-
-  .composer-bar > span {
-    max-width: 65%;
-    line-height: 1.3
-  }
-
-  .composer-bar button {
-    min-width: 42px;
-    min-height: 40px
-  }
-
-  .disclaimer {
-    margin-bottom: max(8px, env(safe-area-inset-bottom))
-  }
-
-  dialog {
-    margin: auto;
-    max-height: calc(100dvh - 24px);
-    overflow: auto
+  .message-actions {
+    opacity: 1
   }
 
   .settings-grid {
     grid-template-columns: 1fr
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .sidebar {
-    transition: none
   }
 }

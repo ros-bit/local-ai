@@ -7,36 +7,30 @@
     <link rel="stylesheet" href="/style.css">
   </head>
   <body>
-    <aside id="sidebar" class="sidebar">
+    <aside class="sidebar">
       <div class="brand">
         <span class="brand-mark">L</span>
         <span>Local AI</span>
       </div>
-      <button id="new-chat" class="new-chat"><span class="new-chat-icon" aria-hidden="true">＋</span><span>New chat</span></button>
+      <button id="new-chat" class="new-chat">＋ New chat</button>
       <input id="search" class="search" placeholder="Search conversations…" aria-label="Search conversations">
       <div class="conversation-label">Conversations</div>
       <nav id="conversation-list"></nav>
       <div class="sidebar-footer">
         <span class="status-dot"></span>
         <span id="model-label">Connecting…</span>
-        <button id="settings-button" class="settings-button" title="Settings" aria-label="Open settings">
-          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 8.25a3.75 3.75 0 1 0 0 7.5 3.75 3.75 0 0 0 0-7.5Zm8.1 3.75c0-.45-.05-.89-.14-1.31l1.62-1.27-1.5-2.6-1.94.8a8.1 8.1 0 0 0-2.27-1.31L15.6 4h-3l-.27 2.31a8.1 8.1 0 0 0-2.27 1.31l-1.94-.8-1.5 2.6 1.62 1.27c-.09.42-.14.86-.14 1.31s.05.89.14 1.31l-1.62 1.27 1.5 2.6 1.94-.8a8.1 8.1 0 0 0 2.27 1.31L12.6 20h3l.27-2.31a8.1 8.1 0 0 0 2.27-1.31l1.94.8 1.5-2.6-1.62-1.27c.09-.42.14-.86.14-1.31Z"/></svg>
-        </button>
+        <button id="settings-button" title="Settings">⚙</button>
       </div>
     </aside>
 
     <main class="main">
       <header class="topbar">
-        <button id="menu-button" class="menu-button icon-button" type="button" aria-label="Open conversations" aria-controls="sidebar" aria-expanded="false">☰</button>
         <div>
           <strong id="page-title">New conversation</strong>
           <span class="local-badge">LOCAL</span>
         </div>
-        <button id="clear-chat" class="icon-button exit-button" title="Delete current conversation" aria-label="Delete current conversation">
-          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 6.5h14M9 6.5V4.8c0-.44.36-.8.8-.8h4.4c.44 0 .8.36.8.8v1.7m-8.5 0 .7 13.2c.04.73.64 1.3 1.37 1.3h7.86c.73 0 1.33-.57 1.37-1.3l.7-13.2M10 10.2v7.1m4-7.1v7.1"/></svg>
-        </button>
+        <button id="clear-chat" class="icon-button" title="Delete current conversation">⌫</button>
       </header>
-      <button id="sidebar-backdrop" class="sidebar-backdrop hidden" type="button" aria-label="Close conversations"></button>
 
       <section id="messages" class="messages">
         <div id="welcome" class="welcome">

@@ -38,37 +38,15 @@ def write_settings(config: dict) -> None:
 
 
 def context_messages(messages: list[Message], max_chars: int) -> list[Message]:
-    if not messages:
-        return []
-
-    # Keep the newest complete turns together so an answer is not fed without
-    # the question that produced it. Always retain the latest user message.
-    selected: list[Message] = [messages[-1]]
-    used = len(messages[-1].content)
-    index = len(messages) - 2
-    while index >= 0:
-        if messages[index].role == "assistant" and index > 0 and messages[index - 1].role == "user":
-            turn = [messages[index - 1], messages[index]]
-            start = index - 1
-        else:
-            turn = [messages[index]]
-            start = index
-        cost = sum(len(message.content) for message in turn)
-        if used + cost > max_chars:
+    selected: list[Message] = []
+    used = 0
+    for message in reversed(messages):
+        cost = len(message.content)
+        if selected and used + cost > max_chars:
             break
-        selected[0:0] = turn
+        selected.insert(0, message)
         used += cost
-        index = start - 1
     return selected
-
-
-def build_prompt_messages(config: dict, conversation: Conversation) -> list[dict[str, str]]:
-    system_prompt = config.get("system_prompt") or SYSTEM_PROMPT
-    context_limit = max(1024, int(config.get("context_length", 12000)) * 4)
-    return (
-        [{"role": "system", "content": system_prompt}]
-        + [message.to_dict() for message in context_messages(conversation.messages, context_limit)]
-    )
 
 
 def load_conversation(conversation_id: str) -> Conversation:
@@ -234,7 +212,10 @@ class Handler(BaseHTTPRequestHandler):
             if not regenerating or not conversation.messages or conversation.messages[-1].role != "user":
                 conversation.messages.append(Message("user", user_text))
             client = OllamaClient(config["ollama_url"], config["model"], config["timeout_seconds"])
-            prompt_messages = build_prompt_messages(config, conversation)
+            prompt_messages = [{"role": "system", "content": config.get("system_prompt", SYSTEM_PROMPT)}]
+            prompt_messages += [message.to_dict() for message in context_messages(
+                conversation.messages, int(config.get("context_length", 12000)) * 4
+            )]
             chunks = client.chat(
                 prompt_messages,
                 stream=bool(config.get("streaming", True)),
@@ -291,6 +272,7 @@ def run() -> None:
     CONVERSATIONS_DIR.mkdir(parents=True, exist_ok=True)
     server = ThreadingHTTPServer((host, port), Handler)
     print(f"Local AI running at http://127.0.0.1:{port}")
+
     server.serve_forever()
 
 
